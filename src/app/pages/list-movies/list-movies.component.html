@@ -1,0 +1,74 @@
+<div class="container">
+
+    <!-- Mozna zrobić osobny komponent pod filtry -->
+    <form [formGroup]="formFilters">
+        <div class="container__filters">
+            <mat-form-field>
+                <mat-label>Nazwa filmu</mat-label>
+                <input matInput placeholder="" formControlName="movieTitle">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Rok</mat-label>
+                <input matInput type="number" placeholder="" formControlName="movieYear">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Typ</mat-label>
+                <mat-select formControlName="movieType">
+                  <mat-option *ngFor="let type of movieTypes" [value]="type">
+                    {{ type }}
+                  </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <button 
+                (click)="search()"
+                [disabled]="isLoadingData"
+                mat-flat-button 
+                color="primary"
+            >
+                Wyszukaj
+            </button>
+            <button 
+                (click)="reset()"
+                [disabled]="isLoadingData"
+                mat-flat-button 
+                color="primary"
+            >
+                Resetuj
+            </button>
+        </div>
+    </form>
+
+    <span *ngIf="apiError" class="container__error">
+        {{ apiError }}
+    </span>
+
+    <ng-container *ngIf="moviesList.length">
+        <table mat-table [dataSource]="moviesList">
+            <ng-container matColumnDef="Title">
+                <th mat-header-cell *matHeaderCellDef>Tytuł</th>
+                <td mat-cell *matCellDef="let element"> {{element.Title}} </td>
+            </ng-container>
+            <ng-container matColumnDef="Type">
+                <th mat-header-cell *matHeaderCellDef>Typ</th>
+                <td mat-cell *matCellDef="let element"> {{element.Type}} </td>
+            </ng-container>
+            <ng-container matColumnDef="Year">
+                <th mat-header-cell *matHeaderCellDef>Rok</th>
+                <td mat-cell *matCellDef="let element"> {{element.Year}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr 
+                *matRowDef="let row; columns: displayedColumns;"
+                (click)="onClickMovie(row)"
+                mat-row
+            ></tr>
+        </table>
+    
+        <mat-paginator 
+            (page)="onChangePage($event)"
+            [length]="paginationData.totalRecords"
+            [pageSize]="10"
+            [disabled]="isLoadingData"
+        ></mat-paginator>
+    </ng-container>
+</div>
