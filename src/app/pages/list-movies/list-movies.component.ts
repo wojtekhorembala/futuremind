@@ -3,10 +3,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 
+import { Subscription } from 'rxjs';
+
 import { MoviesService } from 'src/app/services/movies.service';
 import { MovieType } from 'src/app/enum/movie.enum';
 import { IGetMovies, IMovie, IMoviesFilterPostData } from 'src/app/interfaces/movies.interface';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-list-movies',
