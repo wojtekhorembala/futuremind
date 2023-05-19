@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
@@ -6,13 +6,14 @@ import { Router } from '@angular/router';
 import { MoviesService } from 'src/app/services/movies.service';
 import { MovieType } from 'src/app/enum/movie.enum';
 import { IGetMovies, IMovie, IMoviesFilterPostData } from 'src/app/interfaces/movies.interface';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-list-movies',
   templateUrl: './list-movies.component.html',
   styleUrls: ['./list-movies.component.scss']
 })
-export class ListMoviesComponent {
+export class ListMoviesComponent implements OnDestroy {
 
   public readonly movieTypes: MovieType[] = [MovieType.Episode, MovieType.Movie, MovieType.Series];
   public readonly displayedColumns: string[] = ['Title', 'Type', 'Year'];
@@ -31,11 +32,17 @@ export class ListMoviesComponent {
   public moviesList: IMovie[] = [];
   public isLoadingData: boolean;
 
+  private getMoviesListSubsc: Subscription;
+
   constructor(
     private moviesService: MoviesService,
     private router: Router,
   ) {
     this.setDefaultPaginationData();
+  }
+
+  ngOnDestroy(): void {
+    this.getMoviesListSubsc?.unsubscribe();
   }
 
   public get filtersRequestData(): IMoviesFilterPostData {
@@ -56,7 +63,7 @@ export class ListMoviesComponent {
 
   public getMovies(): void {
     this.isLoadingData = true;
-    this.moviesService.getMovies(this.filtersRequestData).subscribe({
+    this.getMoviesListSubsc = this.moviesService.getMovies(this.filtersRequestData).subscribe({
       next: (data) => this.onSuccessGetMovies(data),
       error: (error) => this.onErrorGetMovies(error),
     });
