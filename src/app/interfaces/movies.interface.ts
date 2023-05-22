@@ -17,6 +17,7 @@ export interface IMovie {
 
 export interface IMovieDetails extends IMovie {
     Rated: string;
+    Plot: string;
     // ... i wiele wiecej
 }
 

@@ -1,3 +1,19 @@
 <div *ngIf="movieData" class="container">
-    {{ movieData | json }}
+    <div class="flex-row container__basic-data">
+        <div class="column left">
+            <img 
+                [src]="movieData.Poster"
+                class="movie-img"
+                alt="movie image"
+            >
+        </div>
+        <div class="column right">
+            <h1 class="move-title">
+                {{ movieData.Title }}
+            </h1>
+            <p class="movie-description">
+                {{ movieData.Plot }}
+            </p>
+        </div>
+    </div>
 </div>
